@@ -188,48 +188,56 @@ tr:hover td{background:var(--bg3)}
   <div class="overlay" id="overlay">
     <div class="modal">
       <h2 id="modal-titulo">Nuevo afiliado</h2>
+
+      <!-- BLOQUE 1: Identificación -->
       <div class="frow">
         <div class="field"><label>N° afiliado</label><input id="f-nro" placeholder="00001"></div>
-        <div class="field"><label>Monto ($)</label><input id="f-monto" type="number" placeholder="8500"></div>
-      </div>
-      <div class="frow">
         <div class="field"><label>Mutual / Edificio</label><input id="f-mutual" placeholder="Ej: San Valentín"></div>
-        <div class="field"><label>Plan</label><input id="f-plan" placeholder="Ej: Plan Bienestar (4)"></div>
       </div>
+      <div class="field"><label>Plan</label><input id="f-plan" placeholder="Ej: Plan Bienestar (4)"></div>
       <div class="frow">
         <div class="field"><label>Nombre</label><input id="f-nombre" placeholder="Juan"></div>
         <div class="field"><label>Apellido</label><input id="f-apellido" placeholder="Pérez"></div>
       </div>
 
       <div class="sep"></div>
-      <div class="opt-label">📍 Ubicación — opcional. En zonas rurales usá la referencia de texto y capturá el GPS cuando estés ahí.</div>
 
+      <!-- BLOQUE 2: Cobro -->
+      <div class="frow">
+        <div class="field"><label>Monto ($)</label><input id="f-monto" type="number" placeholder="52500"></div>
+        <div class="field"><label>Fecha de cobro</label><input id="f-fecha" type="date"></div>
+      </div>
+      <div class="field"><label>Horario de cobro</label><input id="f-horario" placeholder="Ej: Antes del 10, después de 19hs"></div>
+      <div class="frow">
+        <div class="field"><label>Método de pago</label>
+          <select id="f-metodo"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option></select>
+        </div>
+        <div class="field"><label>Estado de pago</label>
+          <select id="f-estado"><option value="pendiente">Pendiente</option><option value="pagado">Pagado</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Fecha de pago</label><input id="f-fechapago" type="date"></div>
+
+      <div class="sep"></div>
+
+      <!-- BLOQUE 3: Ubicación -->
+      <div class="opt-label">📍 Ubicación — opcional. Escribí una referencia y/o capturá el GPS cuando estés en el lugar.</div>
       <div class="field">
         <label>Referencia de ubicación</label>
-        <textarea id="f-ref" placeholder="Ej: A la vuelta del caps, portón azul. / Kiosco amarillo, 3ra casa. / Camino al cerro antes del puente."></textarea>
+        <textarea id="f-ref" placeholder="Ej: Frente al kiosco amarillo, portón azul. / A la vuelta del caps, 3ra casa."></textarea>
       </div>
       <div class="field">
-        <label>GPS (opcional — capturá cuando estés en el lugar)</label>
+        <label>GPS (capturá cuando estés ahí)</label>
         <button class="btn-loc" onclick="capturarGPS()">⊙ Capturar mi ubicación GPS ahora</button>
         <div class="gps-captured" id="gps-captured">✓ GPS capturado: <span id="gps-coords-txt"></span></div>
         <input id="f-coords" type="hidden">
       </div>
 
       <div class="sep"></div>
-      <div class="frow">
-        <div class="field"><label>Fecha de cobro</label><input id="f-fecha" type="date"></div>
-        <div class="field"><label>Método de pago</label>
-          <select id="f-metodo"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option></select>
-        </div>
-      </div>
-      <div class="frow">
-        <div class="field"><label>Estado de pago</label>
-          <select id="f-estado"><option value="pendiente">Pendiente</option><option value="pagado">Pagado</option></select>
-        </div>
-        <div class="field"><label>Fecha de pago</label><input id="f-fechapago" type="date"></div>
-      </div>
-      <div class="field"><label>Horario de cobro</label><input id="f-horario" placeholder="Ej: Antes del 10, después de 19hs"></div>
+
+      <!-- BLOQUE 4: Nota -->
       <div class="field"><label>Nota interna</label><textarea id="f-nota" placeholder="Observaciones de cobro..."></textarea></div>
+
       <div class="modal-actions">
         <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
         <button class="btn-save" onclick="guardar()">Guardar</button>
@@ -253,7 +261,12 @@ function fmtM(m){return'$'+(parseFloat(m)||0).toLocaleString('es-AR');}
 
 function estadoReal(a){
   if(a.estado==='pagado')return'pagado';
-  if(a.fecha&&new Date(a.fecha)<new Date(new Date().toDateString()))return'vencido';
+  if(a.fecha){
+    const hoy=new Date();
+    hoy.setHours(0,0,0,0);
+    const fechaCobro=new Date(a.fecha+'T00:00:00');
+    if(fechaCobro<hoy)return'vencido';
+  }
   return'pendiente';
 }
 
