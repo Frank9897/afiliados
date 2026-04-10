@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#185FA5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Afiliados">
+<title>Obra Social — Afiliados</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f6f9;color:#1a1a2e;min-height:100vh}
+  .app{max-width:480px;margin:0 auto;background:#fff;min-height:100vh;position:relative}
+  .topbar{background:#185FA5;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+  .topbar h1{font-size:17px;font-weight:600;color:#fff}
+  .topbar small{font-size:11px;color:#B5D4F4;display:block;margin-top:2px}
+  .base-bar{background:#E6F1FB;border-bottom:1px solid #B5D4F4;padding:8px 12px;display:flex;gap:6px;align-items:center}
+  .base-bar input{flex:1;padding:7px 10px;border:1px solid #B5D4F4;border-radius:8px;background:#fff;color:#042C53;font-size:13px;outline:none}
+  .base-bar .btn-gps-base{padding:7px 10px;border:1px solid #185FA5;border-radius:8px;background:transparent;color:#185FA5;font-size:12px;cursor:pointer;white-space:nowrap;font-weight:500}
+  .base-bar .btn-aplicar{padding:7px 12px;border:none;border-radius:8px;background:#185FA5;color:#fff;font-size:12px;cursor:pointer;white-space:nowrap;font-weight:500}
+  .tabs{display:flex;border-bottom:1px solid #e8eaed;background:#fff;overflow-x:auto;position:sticky;top:57px;z-index:4}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:1;padding:11px 4px;font-size:12px;text-align:center;cursor:pointer;color:#666;border-bottom:2px solid transparent;white-space:nowrap;min-width:70px;font-weight:500;transition:color .2s}
+  .tab.active{color:#185FA5;border-bottom-color:#185FA5}
+  .panel{display:none;padding:12px}
+  .panel.active{display:block}
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+  .stat{background:#f4f6f9;border-radius:10px;padding:10px 6px;text-align:center}
+  .stat-val{font-size:20px;font-weight:700}
+  .stat-lbl{font-size:11px;color:#666;margin-top:2px}
+  .toolbar{display:flex;gap:7px;margin-bottom:10px;align-items:center}
+  .toolbar input{flex:1;padding:9px 11px;border:1px solid #ddd;border-radius:8px;background:#f9f9f9;font-size:13px;outline:none;color:#1a1a2e}
+  .toolbar input:focus{border-color:#185FA5;background:#fff}
+  .toolbar select{padding:9px 7px;border:1px solid #ddd;border-radius:8px;background:#f9f9f9;font-size:12px;color:#1a1a2e;outline:none}
+  .btn-add{background:#185FA5;color:#fff;border:none;border-radius:8px;padding:9px 13px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .card{background:#fff;border:1px solid #e8eaed;border-radius:12px;padding:12px 14px;margin-bottom:8px;transition:box-shadow .15s}
+  .card.pagado{border-left:3px solid #639922}
+  .card.pendiente{border-left:3px solid #EF9F27}
+  .card.vencido{border-left:3px solid #E24B4A}
+  .card-header{display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap}
+  .avatar{width:38px;height:38px;border-radius:50%;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#0C447C;flex-shrink:0}
+  .card-title{flex:1;min-width:0}
+  .card-title p{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-title span{font-size:11px;color:#888}
+  .badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
+  .b-pag{background:#EAF3DE;color:#27500A}
+  .b-pen{background:#FAEEDA;color:#633806}
+  .b-venc{background:#FCEBEB;color:#791F1F}
+  .b-ef{background:#E6F1FB;color:#0C447C}
+  .b-tr{background:#EEEDFE;color:#3C3489}
+  .b-dist{background:#f4f6f9;color:#444;font-size:10px}
+  .card-body{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:12px;margin-bottom:8px}
+  .lbl{color:#888}
+  .val{font-weight:600;color:#1a1a2e}
+  .card-addr{font-size:12px;color:#666;margin-bottom:8px;line-height:1.4}
+  .card-nota{font-size:12px;color:#666;font-style:italic;margin-bottom:8px;padding:6px 9px;background:#f9f9f9;border-radius:8px;line-height:1.4}
+  .card-actions{display:flex;gap:6px}
+  .btn-sm{padding:6px 0;border:1px solid #ddd;border-radius:8px;background:transparent;font-size:12px;cursor:pointer;flex:1;text-align:center;font-weight:500;transition:background .15s}
+  .btn-gps{border-color:#185FA5;color:#185FA5}
+  .btn-edit{border-color:#639922;color:#27500A}
+  .btn-del{border-color:#E24B4A;color:#A32D2D}
+  .btn-sm:active{background:#f0f0f0}
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:360px}
+  th{background:#f4f6f9;padding:9px 8px;text-align:left;font-weight:600;color:#666;border-bottom:1px solid #e8eaed;white-space:nowrap}
+  td{padding:9px 8px;border-bottom:1px solid #f0f0f0;color:#1a1a2e}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:#fafafa}
+  .recaud{display:flex;flex-direction:column;gap:12px}
+  .rec-big{background:#f4f6f9;border-radius:14px;padding:20px;text-align:center}
+  .rec-big .rv{font-size:30px;font-weight:700;color:#27500A}
+  .rec-big .rl{font-size:13px;color:#666;margin-top:5px}
+  .rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .rec-card{background:#f4f6f9;border-radius:10px;padding:13px;text-align:center}
+  .rec-card .rv{font-size:18px;font-weight:700}
+  .rec-card .rl{font-size:11px;color:#666;margin-top:3px}
+  .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+  .bar-lbl{width:82px;color:#666}
+  .bar-track{flex:1;height:9px;background:#e8eaed;border-radius:5px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:5px;transition:width .4s}
+  .bar-val{width:46px;text-align:right;font-weight:600}
+  .hint{font-size:11px;color:#666;margin-bottom:8px;padding:7px 10px;background:#f4f6f9;border-radius:8px}
+  .section-title{font-size:12px;font-weight:600;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px}
+  .empty{text-align:center;padding:40px 20px;color:#999;font-size:14px}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:50;overflow-y:auto;padding:20px 12px 40px}
+  .overlay.open{display:flex;align-items:flex-start;justify-content:center}
+  .modal{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:430px;margin-top:10px}
+  .modal h2{font-size:16px;font-weight:700;margin-bottom:16px;color:#1a1a2e}
+  .field{margin-bottom:11px}
+  .field label{display:block;font-size:11px;color:#888;margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:9px;background:#f9f9f9;color:#1a1a2e;font-size:14px;outline:none;font-family:inherit;-webkit-appearance:none;appearance:none}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#185FA5;background:#fff}
+  .field textarea{resize:vertical;min-height:60px;line-height:1.5}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .modal-actions{display:flex;gap:9px;margin-top:16px}
+  .btn-save{flex:1;background:#185FA5;color:#fff;border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:700;cursor:pointer}
+  .btn-cancel{flex:1;background:#f4f6f9;border:none;border-radius:9px;padding:12px;font-size:14px;cursor:pointer;color:#666;font-weight:500}
+  .btn-loc{margin-top:6px;padding:8px 12px;border:1px solid #185FA5;color:#185FA5;border-radius:9px;background:transparent;font-size:13px;cursor:pointer;width:100%;font-weight:500}
+  .coords-field{display:none;margin-top:6px}
+  .coords-field input{background:#EAF3DE;border-color:#97C459;font-size:12px;color:#27500A;font-weight:500}
+  .section-sep{height:1px;background:#f0f0f0;margin:4px 0 12px}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar">
+    <div>
+      <h1>Obra Social — Afiliados</h1>
+      <small id="fecha-hoy"></small>
+    </div>
+  </div>
+
+  <div class="base-bar">
+    <input id="dir-base" placeholder="Dirección base para ordenar por cercanía...">
+    <button class="btn-gps-base" onclick="gpsBase()">⊙ GPS</button>
+    <button class="btn-aplicar" onclick="setBase()">Aplicar</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('lista')">Lista</div>
+    <div class="tab" onclick="showTab('pagados')">Pagados</div>
+    <div class="tab" onclick="showTab('pendientes')">Pendientes</div>
+    <div class="tab" onclick="showTab('vencidos')">Vencidos</div>
+    <div class="tab" onclick="showTab('recaudado')">Recaudado</div>
+  </div>
+
+  <div class="panel active" id="panel-lista">
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat"><div class="stat-val" id="st-pag" style="color:#27500A">0</div><div class="stat-lbl">Pagados</div></div>
+      <div class="stat"><div class="stat-val" id="st-venc" style="color:#A32D2D">0</div><div class="stat-lbl">Vencidos</div></div>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="buscar" placeholder="Buscar nombre, N° afiliado...">
+      <select id="ordenar">
+        <option value="apellido">Nombre</option>
+        <option value="nro">N° afiliado</option>
+        <option value="fecha">Fecha cobro</option>
+        <option value="monto">Monto</option>
+        <option value="estado">Estado</option>
+        <option value="distancia">Cercanía</option>
+      </select>
+      <button class="btn-add" onclick="abrirModal()">+ Nuevo</button>
+    </div>
+    <div id="hint-dist" style="display:none" class="hint">📍 Ordenando por cercanía a: <span id="hint-base-txt"></span></div>
+    <div id="lista-cont"></div>
+  </div>
+
+  <div class="panel" id="panel-pagados">
+    <div class="section-title">Afiliados con pago confirmado</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>Método</th><th>F. pago</th></tr></thead>
+        <tbody id="tbl-pagados"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-pendientes">
+    <div class="section-title">Afiliados con pago pendiente</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>F. cobro</th><th>Nota</th></tr></thead>
+        <tbody id="tbl-pendientes"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-vencidos">
+    <div class="section-title">Fecha de cobro ya vencida</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>Venció</th><th>Estado</th></tr></thead>
+        <tbody id="tbl-vencidos"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-recaudado">
+    <div id="recaudado-cont"></div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2 id="modal-titulo">Nuevo afiliado</h2>
+      <div class="frow">
+        <div class="field"><label>N° afiliado</label><input id="f-nro" placeholder="00001"></div>
+        <div class="field"><label>Monto ($)</label><input id="f-monto" type="number" placeholder="8500"></div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Nombre</label><input id="f-nombre" placeholder="Juan"></div>
+        <div class="field"><label>Apellido</label><input id="f-apellido" placeholder="Pérez"></div>
+      </div>
+      <div class="field">
+        <label>Dirección</label>
+        <input id="f-dir" placeholder="Calle, número, ciudad">
+        <button class="btn-loc" onclick="usarUbicacionAfiliado()">⊙ Usar mi ubicación actual (GPS)</button>
+        <div class="coords-field" id="f-coords-wrap">
+          <input id="f-coords" placeholder="lat, lng" readonly>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="field"><label>Fecha de cobro</label><input id="f-fecha" type="date"></div>
+        <div class="field"><label>Método de pago</label>
+          <select id="f-metodo">
+            <option value="efectivo">Efectivo</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
+      </div>
+      <div class="section-sep"></div>
+      <div class="frow">
+        <div class="field"><label>Estado de pago</label>
+          <select id="f-estado">
+            <option value="pendiente">Pendiente</option>
+            <option value="pagado">Pagado</option>
+          </select>
+        </div>
+        <div class="field"><label>Fecha de pago</label><input id="f-fechapago" type="date"></div>
+      </div>
+      <div class="field"><label>Nota</label><textarea id="f-nota" placeholder="Observaciones opcionales..."></textarea></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-save" onclick="guardar()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const KEY = 'afiliados_obra_social_v3';
+let data = [];
+let editId = null;
+let baseCoords = null;
+let baseTxt = '';
+
+function cargar() {
+  try { data = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { data = []; }
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+function saveBase() { localStorage.setItem(KEY + '_base', JSON.stringify({ coords: baseCoords, txt: baseTxt })); }
+function loadBase() {
+  try {
+    const b = JSON.parse(localStorage.getItem(KEY + '_base'));
+    if (b) { baseCoords = b.coords; baseTxt = b.txt; document.getElementById('dir-base').value = baseTxt; }
+  } catch(e) {}
+}
+
+function ini(n, a) { return ((n||'')[0]||'').toUpperCase() + ((a||'')[0]||'').toUpperCase(); }
+function fmtF(f) { if (!f) return '—'; const [y,m,d] = f.split('-'); return d+'/'+m+'/'+y; }
+function fmtM(m) { return '$' + (parseFloat(m)||0).toLocaleString('es-AR'); }
+
+function estadoReal(a) {
+  if (a.estado === 'pagado') return 'pagado';
+  if (a.fecha && new Date(a.fecha) < new Date(new Date().toDateString())) return 'vencido';
+  return 'pendiente';
+}
+
+function parseCoords(str) {
+  if (!str) return null;
+  const m = str.match(/(-?\d+\.?\d*)[,\s]+(-?\d+\.?\d*)/);
+  return m ? { lat: parseFloat(m[1]), lng: parseFloat(m[2]) } : null;
+}
+
+function haversine(c1, c2) {
+  const R = 6371;
+  const dLat = (c2.lat - c1.lat) * Math.PI / 180;
+  const dLng = (c2.lng - c1.lng) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(c1.lat*Math.PI/180)*Math.cos(c2.lat*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function distancia(a) {
+  if (!baseCoords) return null;
+  const c = parseCoords(a.coords);
+  if (!c) return null;
+  return haversine(baseCoords, c);
+}
+
+function fmtDist(km) {
+  if (km === null) return null;
+  return km < 1 ? (Math.round(km * 1000) + 'm') : (km.toFixed(1) + 'km');
+}
+
+function gpsBase() {
+  const btn = document.querySelector('.btn-gps-base');
+  btn.textContent = '...';
+  if (!navigator.geolocation) { alert('GPS no disponible.'); btn.textContent = '⊙ GPS'; return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude.toFixed(6);
+    const lng = pos.coords.longitude.toFixed(6);
+    document.getElementById('dir-base').value = lat + ', ' + lng;
+    baseCoords = { lat: parseFloat(lat), lng: parseFloat(lng) };
+    baseTxt = lat + ', ' + lng;
+    btn.textContent = '⊙ GPS';
+    saveBase();
+    document.getElementById('ordenar').value = 'distancia';
+    renderAll();
+  }, () => { btn.textContent = '⊙ GPS'; alert('No se pudo obtener la ubicación. Verificá los permisos.'); });
+}
+
+function setBase() {
+  const val = document.getElementById('dir-base').value.trim();
+  if (!val) return;
+  const c = parseCoords(val);
+  baseCoords = c;
+  baseTxt = val;
+  saveBase();
+  if (c) document.getElementById('ordenar').value = 'distancia';
+  renderAll();
+}
+
+function showTab(t) {
+  ['lista','pagados','pendientes','vencidos','recaudado'].forEach((tab, i) => {
+    document.querySelectorAll('.tab')[i].classList.toggle('active', tab === t);
+  });
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('panel-' + t).classList.add('active');
+  renderAll();
+}
+
+function renderStats() {
+  document.getElementById('st-total').textContent = data.length;
+  document.getElementById('st-pag').textContent = data.filter(a => estadoReal(a) === 'pagado').length;
+  document.getElementById('st-venc').textContent = data.filter(a => estadoReal(a) === 'vencido').length;
+}
+
+function renderLista() {
+  renderStats();
+  const ord = document.getElementById('ordenar').value;
+  const hintEl = document.getElementById('hint-dist');
+  if (ord === 'distancia' && baseCoords) {
+    hintEl.style.display = 'block';
+    document.getElementById('hint-base-txt').textContent = baseTxt;
+  } else {
+    hintEl.style.display = 'none';
+  }
+  const q = document.getElementById('buscar').value.toLowerCase();
+  let lista = data.filter(a =>
+    (a.nombre||'').toLowerCase().includes(q) ||
+    (a.apellido||'').toLowerCase().includes(q) ||
+    (a.nro||'').toLowerCase().includes(q) ||
+    (a.dir||'').toLowerCase().includes(q)
+  );
+  lista.sort((a, b) => {
+    if (ord === 'apellido') return (a.apellido||'').localeCompare(b.apellido||'');
+    if (ord === 'nro') return (a.nro||'').localeCompare(b.nro||'');
+    if (ord === 'fecha') return (a.fecha||'').localeCompare(b.fecha||'');
+    if (ord === 'monto') return (parseFloat(b.monto)||0) - (parseFloat(a.monto)||0);
+    if (ord === 'estado') { const o = {pagado:0,pendiente:1,vencido:2}; return (o[estadoReal(a)]||0) - (o[estadoReal(b)]||0); }
+    if (ord === 'distancia') {
+      const da = distancia(a), db = distancia(b);
+      if (da === null && db === null) return 0;
+      if (da === null) return 1;
+      if (db === null) return -1;
+      return da - db;
+    }
+    return 0;
+  });
+  const cont = document.getElementById('lista-cont');
+  if (!lista.length) { cont.innerHTML = '<div class="empty">No hay afiliados.<br>Tocá + Nuevo para agregar.</div>'; return; }
+  cont.innerHTML = lista.map(a => {
+    const er = estadoReal(a);
+    const bCls = er === 'pagado' ? 'b-pag' : er === 'vencido' ? 'b-venc' : 'b-pen';
+    const bTxt = er === 'pagado' ? 'Pagado' : er === 'vencido' ? 'Vencido' : 'Pendiente';
+    const mCls = a.metodo === 'transferencia' ? 'b-tr' : 'b-ef';
+    const mTxt = a.metodo === 'transferencia' ? 'Transfer.' : 'Efectivo';
+    const dist = distancia(a);
+    const distBadge = dist !== null ? `<span class="badge b-dist">📍 ${fmtDist(dist)}</span>` : '';
+    const coordsParsed = parseCoords(a.coords);
+    const gpsUrl = coordsParsed
+      ? `https://maps.google.com/?q=${coordsParsed.lat},${coordsParsed.lng}`
+      : (a.dir ? `https://maps.google.com/?q=${encodeURIComponent(a.dir)}` : '');
+    return `<div class="card ${er}">
+      <div class="card-header">
+        <div class="avatar">${ini(a.nombre, a.apellido)}</div>
+        <div class="card-title">
+          <p>${a.apellido||''}, ${a.nombre||''}</p>
+          <span>N° ${a.nro||'—'}</span>
+        </div>
+        <span class="badge ${bCls}">${bTxt}</span>
+        <span class="badge ${mCls}">${mTxt}</span>
+        ${distBadge}
+      </div>
+      <div class="card-body">
+        <span class="lbl">Monto</span><span class="val">${fmtM(a.monto)}</span>
+        <span class="lbl">Fecha cobro</span><span class="val">${fmtF(a.fecha)}</span>
+        ${a.fechapago ? `<span class="lbl">Fecha pago</span><span class="val">${fmtF(a.fechapago)}</span>` : ''}
+      </div>
+      ${a.dir ? `<div class="card-addr">📍 ${a.dir}</div>` : ''}
+      ${a.nota ? `<div class="card-nota">📋 ${a.nota}</div>` : ''}
+      <div class="card-actions">
+        ${gpsUrl ? `<button class="btn-sm btn-gps" onclick="window.open('${gpsUrl}','_blank')">Ver en GPS</button>` : ''}
+        <button class="btn-sm btn-edit" onclick="editar('${a.id}')">Editar</button>
+        <button class="btn-sm btn-del" onclick="eliminar('${a.id}')">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTabla(tbId, lista, tipo) {
+  const tb = document.getElementById(tbId);
+  if (!lista.length) { tb.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:28px;color:#999">Sin registros</td></tr>`; return; }
+  tb.innerHTML = lista.map(a => {
+    if (tipo === 'pag') return `<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td style="color:#27500A;font-weight:600">${fmtM(a.monto)}</td><td>${a.metodo==='efectivo'?'Efectivo':'Transfer.'}</td><td>${fmtF(a.fechapago||a.fecha)}</td></tr>`;
+    if (tipo === 'pen') return `<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td>${fmtM(a.monto)}</td><td>${fmtF(a.fecha)}</td><td style="color:#888;font-style:italic;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.nota||'—'}</td></tr>`;
+    if (tipo === 'venc') return `<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td style="color:#A32D2D;font-weight:600">${fmtM(a.monto)}</td><td style="color:#A32D2D">${fmtF(a.fecha)}</td><td><span class="badge b-venc">Vencido</span></td></tr>`;
+    return '';
+  }).join('');
+}
+
+function renderRecaudado() {
+  const pag = data.filter(a => estadoReal(a) === 'pagado');
+  const pen = data.filter(a => estadoReal(a) === 'pendiente');
+  const venc = data.filter(a => estadoReal(a) === 'vencido');
+  const sum = arr => arr.reduce((s,a) => s + (parseFloat(a.monto)||0), 0);
+  const sP = sum(pag), sPen = sum(pen), sV = sum(venc);
+  const sEf = sum(pag.filter(a => a.metodo === 'efectivo'));
+  const sTr = sum(pag.filter(a => a.metodo === 'transferencia'));
+  const tot = sP + sPen + sV || 1;
+  const pP = Math.round(sP/tot*100), pPen = Math.round(sPen/tot*100), pV = Math.round(sV/tot*100);
+  document.getElementById('recaudado-cont').innerHTML = `
+    <div class="recaud">
+      <div class="rec-big">
+        <div class="rv">${fmtM(sP)}</div>
+        <div class="rl">Total recaudado (pagados)</div>
+      </div>
+      <div class="rec-grid">
+        <div class="rec-card"><div class="rv" style="color:#27500A">${fmtM(sEf)}</div><div class="rl">Efectivo</div></div>
+        <div class="rec-card"><div class="rv" style="color:#3C3489">${fmtM(sTr)}</div><div class="rl">Transferencia</div></div>
+        <div class="rec-card"><div class="rv" style="color:#EF9F27">${fmtM(sPen)}</div><div class="rl">Por cobrar</div></div>
+        <div class="rec-card"><div class="rv" style="color:#A32D2D">${fmtM(sV)}</div><div class="rl">Vencidos sin pagar</div></div>
+      </div>
+      <div style="background:#f4f6f9;border-radius:12px;padding:14px">
+        <div style="font-size:12px;font-weight:600;margin-bottom:12px;color:#888;text-transform:uppercase;letter-spacing:.4px">Distribución por estado</div>
+        <div class="bar-row"><span class="bar-lbl">Pagados</span><div class="bar-track"><div class="bar-fill" style="width:${pP}%;background:#639922"></div></div><span class="bar-val" style="color:#27500A">${pP}%</span></div>
+        <div class="bar-row"><span class="bar-lbl">Pendientes</span><div class="bar-track"><div class="bar-fill" style="width:${pPen}%;background:#EF9F27"></div></div><span class="bar-val" style="color:#633806">${pPen}%</span></div>
+        <div class="bar-row"><span class="bar-lbl">Vencidos</span><div class="bar-track"><div class="bar-fill" style="width:${pV}%;background:#E24B4A"></div></div><span class="bar-val" style="color:#A32D2D">${pV}%</span></div>
+      </div>
+      <div style="font-size:11px;color:#999;text-align:center;padding-bottom:8px">
+        ${data.length} afiliados en total &nbsp;|&nbsp; ${pag.length} pagados &nbsp;|&nbsp; ${pen.length} pendientes &nbsp;|&nbsp; ${venc.length} vencidos
+      </div>
+    </div>`;
+}
+
+function renderAll() {
+  renderLista();
+  renderTabla('tbl-pagados', data.filter(a => estadoReal(a) === 'pagado'), 'pag');
+  renderTabla('tbl-pendientes', data.filter(a => estadoReal(a) === 'pendiente'), 'pen');
+  renderTabla('tbl-vencidos', data.filter(a => estadoReal(a) === 'vencido'), 'venc');
+  renderRecaudado();
+}
+
+function usarUbicacionAfiliado() {
+  const btn = document.querySelector('.btn-loc');
+  btn.textContent = 'Obteniendo ubicación...';
+  if (!navigator.geolocation) { alert('GPS no disponible.'); return; }
+  navigator.geolocation.getCurrentPosition(pos => {
+    const lat = pos.coords.latitude.toFixed(6);
+    const lng = pos.coords.longitude.toFixed(6);
+    document.getElementById('f-dir').value = 'Mi ubicación actual';
+    document.getElementById('f-coords').value = lat + ', ' + lng;
+    document.getElementById('f-coords-wrap').style.display = 'block';
+    btn.textContent = '✓ Ubicación capturada (podés editar la dirección)';
+  }, () => {
+    btn.textContent = '⊙ Usar mi ubicación actual (GPS)';
+    alert('No se pudo obtener la ubicación. Verificá los permisos del navegador.');
+  });
+}
+
+function abrirModal(id) {
+  editId = id || null;
+  document.getElementById('modal-titulo').textContent = editId ? 'Editar afiliado' : 'Nuevo afiliado';
+  ['nro','nombre','apellido','dir','monto','fecha','fechapago','nota','coords'].forEach(c => {
+    const el = document.getElementById('f-' + c); if (el) el.value = '';
+  });
+  document.getElementById('f-metodo').value = 'efectivo';
+  document.getElementById('f-estado').value = 'pendiente';
+  document.getElementById('f-coords-wrap').style.display = 'none';
+  document.querySelector('.btn-loc').textContent = '⊙ Usar mi ubicación actual (GPS)';
+  if (editId) {
+    const a = data.find(x => x.id === editId);
+    if (a) {
+      document.getElementById('f-nro').value = a.nro || '';
+      document.getElementById('f-nombre').value = a.nombre || '';
+      document.getElementById('f-apellido').value = a.apellido || '';
+      document.getElementById('f-dir').value = a.dir || '';
+      document.getElementById('f-monto').value = a.monto || '';
+      document.getElementById('f-fecha').value = a.fecha || '';
+      document.getElementById('f-metodo').value = a.metodo || 'efectivo';
+      document.getElementById('f-estado').value = a.estado || 'pendiente';
+      document.getElementById('f-fechapago').value = a.fechapago || '';
+      document.getElementById('f-nota').value = a.nota || '';
+      if (a.coords) {
+        document.getElementById('f-coords').value = a.coords;
+        document.getElementById('f-coords-wrap').style.display = 'block';
+      }
+    }
+  }
+  document.getElementById('overlay').classList.add('open');
+}
+
+function cerrarModal() { document.getElementById('overlay').classList.remove('open'); editId = null; }
+
+function guardar() {
+  const nombre = document.getElementById('f-nombre').value.trim();
+  const apellido = document.getElementById('f-apellido').value.trim();
+  if (!nombre && !apellido) { alert('Ingresá al menos nombre o apellido.'); return; }
+  const coordsVal = document.getElementById('f-coords').value.trim();
+  const obj = {
+    id: editId || ('id_' + Date.now()),
+    nro: document.getElementById('f-nro').value.trim(),
+    nombre, apellido,
+    dir: document.getElementById('f-dir').value.trim(),
+    coords: coordsVal || '',
+    monto: document.getElementById('f-monto').value,
+    fecha: document.getElementById('f-fecha').value,
+    metodo: document.getElementById('f-metodo').value,
+    estado: document.getElementById('f-estado').value,
+    fechapago: document.getElementById('f-fechapago').value,
+    nota: document.getElementById('f-nota').value.trim()
+  };
+  if (!obj.coords) {
+    const c = parseCoords(obj.dir);
+    if (c) obj.coords = obj.dir;
+  }
+  if (editId) { const i = data.findIndex(x => x.id === editId); data[i] = obj; }
+  else data.push(obj);
+  save(); cerrarModal(); renderAll();
+}
+
+function editar(id) { abrirModal(id); }
+
+function eliminar(id) {
+  if (!confirm('¿Eliminar este afiliado? Esta acción no se puede deshacer.')) return;
+  data = data.filter(x => x.id !== id);
+  save(); renderAll();
+}
+
+document.getElementById('fecha-hoy').textContent = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+document.getElementById('buscar').addEventListener('input', renderAll);
+document.getElementById('ordenar').addEventListener('change', renderAll);
+document.getElementById('overlay').addEventListener('click', function(e) { if (e.target === this) cerrarModal(); });
+
+cargar();
+loadBase();
+renderAll();
+</script>
+</body>
+</html>
