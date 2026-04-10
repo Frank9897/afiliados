@@ -193,6 +193,10 @@ tr:hover td{background:var(--bg3)}
         <div class="field"><label>Monto ($)</label><input id="f-monto" type="number" placeholder="8500"></div>
       </div>
       <div class="frow">
+        <div class="field"><label>Mutual / Edificio</label><input id="f-mutual" placeholder="Ej: San Valentín"></div>
+        <div class="field"><label>Plan</label><input id="f-plan" placeholder="Ej: Plan Bienestar (4)"></div>
+      </div>
+      <div class="frow">
         <div class="field"><label>Nombre</label><input id="f-nombre" placeholder="Juan"></div>
         <div class="field"><label>Apellido</label><input id="f-apellido" placeholder="Pérez"></div>
       </div>
@@ -224,6 +228,7 @@ tr:hover td{background:var(--bg3)}
         </div>
         <div class="field"><label>Fecha de pago</label><input id="f-fechapago" type="date"></div>
       </div>
+      <div class="field"><label>Horario de cobro</label><input id="f-horario" placeholder="Ej: Antes del 10, después de 19hs"></div>
       <div class="field"><label>Nota interna</label><textarea id="f-nota" placeholder="Observaciones de cobro..."></textarea></div>
       <div class="modal-actions">
         <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
@@ -320,9 +325,12 @@ function renderLista(){
         ${a.coords?'<span class="badge" style="background:#1a2e0a;color:#C0DD97;font-size:9px">GPS ✓</span>':''}
       </div>
       <div class="card-body">
-        <span class="lbl">Monto</span><span class="val">${fmtM(a.monto)}</span>
-        <span class="lbl">Fecha cobro</span><span class="val">${fmtF(a.fecha)}</span>
-        ${a.fechapago?`<span class="lbl">Fecha pago</span><span class="val">${fmtF(a.fechapago)}</span>`:''}
+      <span class="lbl">Monto</span><span class="val">${fmtM(a.monto)}</span>
+      <span class="lbl">Fecha cobro</span><span class="val">${fmtF(a.fecha)}</span>
+      ${a.mutual?`<span class="lbl">Mutual</span><span class="val">${a.mutual}</span>`:''}
+      ${a.plan?`<span class="lbl">Plan</span><span class="val">${a.plan}</span>`:''}
+      ${a.horario?`<span class="lbl">Horario</span><span class="val">${a.horario}</span>`:''}
+      ${a.fechapago?`<span class="lbl">Fecha pago</span><span class="val">${fmtF(a.fechapago)}</span>`:''}
       </div>
       ${a.ref?`<div class="card-ref">📍 ${a.ref}</div>`:''}
       ${a.nota?`<div class="card-nota">📋 ${a.nota}</div>`:''}
@@ -439,7 +447,7 @@ function capturarGPS(){
 function abrirModal(id){
   editId=id||null;
   document.getElementById('modal-titulo').textContent=editId?'Editar afiliado':'Nuevo afiliado';
-  ['nro','nombre','apellido','monto','fecha','fechapago','nota','ref'].forEach(c=>{const el=document.getElementById('f-'+c);if(el)el.value='';});
+  ['nro','nombre','apellido','monto','fecha','fechapago','nota','ref','mutual','plan','horario'].forEach(c=>{const el=document.getElementById('f-'+c);if(el)el.value='';});
   document.getElementById('f-coords').value='';
   document.getElementById('f-metodo').value='efectivo';
   document.getElementById('f-estado').value='pendiente';
@@ -457,6 +465,9 @@ function abrirModal(id){
       document.getElementById('f-estado').value=a.estado||'pendiente';
       document.getElementById('f-fechapago').value=a.fechapago||'';
       document.getElementById('f-nota').value=a.nota||'';
+      document.getElementById('f-mutual').value=a.mutual||'';
+      document.getElementById('f-plan').value=a.plan||'';
+      document.getElementById('f-horario').value=a.horario||'';
       document.getElementById('f-ref').value=a.ref||'';
       document.getElementById('f-coords').value=a.coords||'';
       if(a.coords){document.getElementById('gps-coords-txt').textContent=a.coords;document.getElementById('gps-captured').style.display='block';document.querySelector('.btn-loc').textContent='⊙ Recapturar GPS';}
@@ -482,6 +493,9 @@ function guardar(){
     metodo:document.getElementById('f-metodo').value,
     estado:document.getElementById('f-estado').value,
     fechapago:document.getElementById('f-fechapago').value,
+    mutual:document.getElementById('f-mutual').value.trim(),
+    plan:document.getElementById('f-plan').value.trim(),
+    horario:document.getElementById('f-horario').value.trim(),
     nota:document.getElementById('f-nota').value.trim()
   };
   if(editId){const i=data.findIndex(x=>x.id===editId);data[i]=obj;}
