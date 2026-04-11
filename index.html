@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Afiliados">
+<title>Obra Social — Afiliados</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f1117;--bg2:#1a1d27;--bg3:#22263a;--bg4:#2a2f45;
+  --border:#2e3450;--border2:#3d4468;
+  --text:#e8eaf6;--text2:#9099b7;--text3:#5a6282;
+  --blue:#378ADD;--blue-bg:#0c1e3a;--blue-light:#B5D4F4;
+  --green:#639922;--green-bg:#1a2e0a;--green-light:#C0DD97;
+  --amber:#EF9F27;--amber-bg:#2a1f05;--amber-light:#FAC775;
+  --red:#E24B4A;--red-bg:#2a0a0a;--red-light:#F7C1C1;
+  --purple:#7F77DD;--purple-bg:#1a1840;--purple-light:#CECBF6;
+  --accent:#378ADD;--accent-bg:#0c1e3a;--accent-light:#B5D4F4;
+}
+body.tema-sol{
+  --bg:#fff0f3;--bg2:#ffffff;--bg3:#fde8ed;--bg4:#fcd6df;
+  --border:#f2b8c6;--border2:#e8919f;
+  --text:#3a0a12;--text2:#7a2535;--text3:#b05060;
+  --blue:#99182A;--blue-bg:#fde8ed;--blue-light:#99182A;
+  --green:#99182A;--green-bg:#fde8ed;--green-light:#7a2535;
+  --amber:#c94060;--amber-bg:#fde8ed;--amber-light:#7a2535;
+  --red:#99182A;--red-bg:#fcd6df;--red-light:#7a2535;
+  --purple:#c94060;--purple-bg:#fde8ed;--purple-light:#99182A;
+  --accent:#99182A;--accent-bg:#fde8ed;--accent-light:#99182A;
+}
+body.tema-floral{
+  --bg:#fdf6f0;--bg2:#ffffff;--bg3:#fdf0f4;--bg4:#fbe8ee;
+  --border:#f0c4cb;--border2:#c87d87;
+  --text:#2a1a1e;--text2:#6b3a42;--text3:#c87d87;
+  --blue:#c87d87;--blue-bg:#fdf0f4;--blue-light:#c87d87;
+  --green:#6b7556;--green-bg:#eef2ea;--green-light:#4a5238;
+  --amber:#e5bca9;--amber-bg:#fdf6f0;--amber-light:#6b3a42;
+  --red:#c87d87;--red-bg:#fdf0f4;--red-light:#6b3a42;
+  --purple:#c87d87;--purple-bg:#fdf0f4;--purple-light:#6b3a42;
+  --accent:#c87d87;--accent-bg:#fdf0f4;--accent-light:#6b3a42;
+}
+body.tema-aruna{
+  --bg:#fdedec;--bg2:#ffffff;--bg3:#f5e6f5;--bg4:#ead6ea;
+  --border:#d4b0d4;--border2:#c295bc;
+  --text:#2a0a2e;--text2:#704f7f;--text3:#c295bc;
+  --blue:#704f7f;--blue-bg:#f5e6f5;--blue-light:#704f7f;
+  --green:#6b7556;--green-bg:#eef2ea;--green-light:#4a5238;
+  --amber:#c295bc;--amber-bg:#f5e6f5;--amber-light:#704f7f;
+  --red:#704f7f;--red-bg:#ead6ea;--red-light:#2a0a2e;
+  --purple:#704f7f;--purple-bg:#f5e6f5;--purple-light:#e7c8d7;
+  --accent:#704f7f;--accent-bg:#f5e6f5;--accent-light:#704f7f;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
+.app{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;position:relative}
+
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:5}
+.topbar h1{font-size:17px;font-weight:600;color:var(--text)}
+.topbar small{font-size:11px;color:var(--text3);display:block;margin-top:2px}
+
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2);overflow-x:auto;position:sticky;top:58px;z-index:4}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;padding:11px 4px;font-size:12px;text-align:center;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;white-space:nowrap;min-width:70px;font-weight:500;transition:color .2s}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+.panel{display:none;padding:12px}
+.panel.active{display:block}
+
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.stat{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center}
+.stat-val{font-size:20px;font-weight:700}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:2px}
+
+.toolbar{display:flex;gap:7px;margin-bottom:10px;align-items:center}
+.toolbar input{flex:1;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-size:13px;outline:none}
+.toolbar input:focus{border-color:var(--blue)}
+.toolbar select{padding:9px 7px;border:1px solid var(--border);border-radius:8px;background:var(--bg3);color:var(--text);font-size:12px;outline:none}
+.btn-add{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+
+.hint-drag{font-size:11px;color:var(--text3);margin-bottom:8px;padding:6px 10px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;gap:6px}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:grab;user-select:none;transition:opacity .15s,transform .15s,border-color .15s}
+.card:active{cursor:grabbing}
+.card.dragging{opacity:.35;transform:scale(.97)}
+.card.drag-over{border-color:var(--blue);border-style:dashed}
+.card.pagado{border-left:3px solid var(--green)}
+.card.pendiente{border-left:3px solid var(--amber)}
+.card.vencido{border-left:3px solid var(--red)}
+
+.card-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.drag-handle{font-size:15px;color:var(--text3);cursor:grab;padding:0 2px;flex-shrink:0;line-height:1}
+.avatar{width:37px;height:37px;border-radius:50%;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--blue-light);flex-shrink:0}
+.card-title{flex:1;min-width:0}
+.card-title p{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.card-title span{font-size:11px;color:var(--text3)}
+
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;white-space:nowrap}
+.b-pag{background:var(--green-bg);color:var(--green-light)}
+.b-pen{background:var(--amber-bg);color:var(--amber-light)}
+.b-venc{background:var(--red-bg);color:var(--red-light)}
+.b-ef{background:var(--blue-bg);color:var(--blue-light)}
+.b-tr{background:var(--purple-bg);color:var(--purple-light)}
+
+.card-body{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;font-size:11px;margin-bottom:7px}
+.lbl{color:var(--text3)}
+.val{font-weight:600;color:var(--text)}
+.card-ref{font-size:12px;color:var(--text2);margin-bottom:7px;line-height:1.5;padding:6px 10px;background:var(--bg3);border-radius:8px;border-left:2px solid var(--border2)}
+.card-nota{font-size:11px;color:var(--text3);font-style:italic;margin-bottom:7px;padding:5px 9px;background:var(--bg3);border-radius:7px}
+.card-actions{display:flex;gap:5px}
+.btn-sm{padding:6px 0;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:11px;cursor:pointer;flex:1;text-align:center;font-weight:500;color:var(--text2)}
+.btn-sm:active{background:var(--bg4)}
+.btn-gps{border-color:var(--blue);color:var(--blue)}
+.btn-edit{border-color:var(--green);color:var(--green-light)}
+.btn-del{border-color:var(--red);color:var(--red-light)}
+
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:340px}
+th{background:var(--bg3);padding:9px 8px;text-align:left;font-weight:600;color:var(--text3);border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 8px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+
+.recaud{display:flex;flex-direction:column;gap:11px}
+.rec-big{background:var(--green-bg);border:1px solid #2a4010;border-radius:14px;padding:20px;text-align:center}
+.rec-big .rv{font-size:28px;font-weight:700;color:var(--green-light)}
+.rec-big .rl{font-size:12px;color:var(--text3);margin-top:4px}
+.rec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rec-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center}
+.rec-card .rv{font-size:18px;font-weight:700}
+.rec-card .rl{font-size:11px;color:var(--text3);margin-top:3px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+.bar-lbl{width:80px;color:var(--text3)}
+.bar-track{flex:1;height:8px;background:var(--bg4);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px}
+.bar-val{width:44px;text-align:right;font-weight:600}
+
+.section-title{font-size:11px;font-weight:600;color:var(--text3);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;line-height:1.7}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:50;overflow-y:auto;padding:16px 12px 40px}
+.overlay.open{display:flex;align-items:flex-start;justify-content:center}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:18px;width:100%;max-width:430px;margin-top:8px}
+.modal h2{font-size:15px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--bg3);color:var(--text);font-size:14px;outline:none;font-family:inherit;-webkit-appearance:none;appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.field select option{background:var(--bg3)}
+.field textarea{resize:vertical;min-height:60px;line-height:1.5}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.sep{height:1px;background:var(--border);margin:10px 0 12px}
+.opt-label{font-size:11px;color:var(--text3);margin-bottom:10px;padding:7px 10px;background:var(--bg3);border-radius:8px;border-left:2px solid var(--border2);line-height:1.5}
+.btn-loc{margin-top:6px;padding:9px 12px;border:1px solid var(--blue);color:var(--blue);border-radius:9px;background:transparent;font-size:12px;cursor:pointer;width:100%;font-weight:500}
+.gps-captured{display:none;margin-top:6px;padding:7px 10px;background:var(--green-bg);border:1px solid #2a4010;border-radius:8px;font-size:11px;color:var(--green-light)}
+.modal-actions{display:flex;gap:8px;margin-top:14px}
+.btn-save{flex:1;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:700;cursor:pointer}
+.btn-cancel{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:12px;font-size:14px;cursor:pointer;color:var(--text2);font-weight:500}
+.tema-btn{position:fixed;bottom:20px;right:16px;z-index:100}
+.tema-toggle{width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:18px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center}
+.tema-panel{display:none;position:absolute;bottom:52px;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:10px;min-width:160px;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.tema-panel.open{display:block}
+.tema-panel p{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:600;padding:0 4px}
+.tema-opt{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;cursor:pointer;border:none;background:transparent;width:100%;text-align:left}
+.tema-opt:hover{background:var(--bg3)}
+.tema-opt.activo{background:var(--bg3);outline:1.5px solid var(--accent)}
+.tema-swatch{width:28px;height:28px;border-radius:50%;flex-shrink:0;border:2px solid rgba(0,0,0,.1)}
+.tema-opt span{font-size:13px;font-weight:500;color:var(--text)}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar">
+    <h1>Obra Social — Afiliados</h1>
+    <small id="fecha-hoy"></small>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('lista')">Lista</div>
+    <div class="tab" onclick="showTab('pagados')">Pagados</div>
+    <div class="tab" onclick="showTab('pendientes')">Pendientes</div>
+    <div class="tab" onclick="showTab('vencidos')">Vencidos</div>
+    <div class="tab" onclick="showTab('recaudado')">Recaudado</div>
+  </div>
+
+  <div class="panel active" id="panel-lista">
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="st-total">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat"><div class="stat-val" id="st-pag" style="color:#C0DD97">0</div><div class="stat-lbl">Pagados</div></div>
+      <div class="stat"><div class="stat-val" id="st-venc" style="color:#F7C1C1">0</div><div class="stat-lbl">Vencidos</div></div>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="buscar" placeholder="Buscar nombre, referencia...">
+      <select id="ordenar" onchange="cambiarOrden()">
+        <option value="manual">Manual ✦</option>
+        <option value="apellido">Nombre</option>
+        <option value="nro">N° afiliado</option>
+        <option value="fecha">Fecha cobro</option>
+        <option value="monto">Monto</option>
+        <option value="estado">Estado</option>
+      </select>
+      <button class="btn-add" onclick="abrirModal()">+ Nuevo</button>
+    </div>
+    <div id="hint-drag" class="hint-drag" style="display:none">☰ Arrastrá las tarjetas para ordenar a tu gusto — se guarda automáticamente</div>
+    <div id="lista-cont"></div>
+  </div>
+
+  <div class="panel" id="panel-pagados">
+    <div class="section-title">Afiliados con pago confirmado</div>
+    <div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>Método</th><th>F. pago</th></tr></thead><tbody id="tbl-pagados"></tbody></table></div>
+  </div>
+
+  <div class="panel" id="panel-pendientes">
+    <div class="section-title">Afiliados con pago pendiente</div>
+    <div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>F. cobro</th><th>Nota</th></tr></thead><tbody id="tbl-pendientes"></tbody></table></div>
+  </div>
+
+  <div class="panel" id="panel-vencidos">
+    <div class="section-title">Fecha de cobro ya vencida</div>
+    <div class="tbl-wrap"><table><thead><tr><th>N°</th><th>Afiliado</th><th>Monto</th><th>Venció</th><th>Estado</th></tr></thead><tbody id="tbl-vencidos"></tbody></table></div>
+  </div>
+
+  <div class="panel" id="panel-recaudado">
+    <div id="recaudado-cont"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <h2 id="modal-titulo">Nuevo afiliado</h2>
+
+      <!-- BLOQUE 1: Identificación -->
+      <div class="frow">
+        <div class="field"><label>N° afiliado</label><input id="f-nro" placeholder="00001"></div>
+        <div class="field"><label>Mutual / Edificio</label><input id="f-mutual" placeholder="Ej: San Valentín"></div>
+      </div>
+      <div class="field"><label>Plan</label><input id="f-plan" placeholder="Ej: Plan Bienestar (4)"></div>
+      <div class="frow">
+        <div class="field"><label>Nombre</label><input id="f-nombre" placeholder="Juan"></div>
+        <div class="field"><label>Apellido</label><input id="f-apellido" placeholder="Pérez"></div>
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- BLOQUE 2: Cobro -->
+      <div class="frow">
+        <div class="field"><label>Monto ($)</label><input id="f-monto" type="number" placeholder="52500"></div>
+        <div class="field"><label>Fecha de cobro</label><input id="f-fecha" type="date"></div>
+      </div>
+      <div class="field"><label>Horario de cobro</label><input id="f-horario" placeholder="Ej: Antes del 10, después de 19hs"></div>
+      <div class="frow">
+        <div class="field"><label>Método de pago</label>
+          <select id="f-metodo"><option value="efectivo">Efectivo</option><option value="transferencia">Transferencia</option></select>
+        </div>
+        <div class="field"><label>Estado de pago</label>
+          <select id="f-estado"><option value="pendiente">Pendiente</option><option value="pagado">Pagado</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Fecha de pago</label><input id="f-fechapago" type="date"></div>
+
+      <div class="sep"></div>
+
+      <!-- BLOQUE 3: Ubicación -->
+      <div class="opt-label">📍 Ubicación — opcional. Escribí una referencia y/o capturá el GPS cuando estés en el lugar.</div>
+      <div class="field">
+        <label>Referencia de ubicación</label>
+        <textarea id="f-ref" placeholder="Ej: Frente al kiosco amarillo, portón azul. / A la vuelta del caps, 3ra casa."></textarea>
+      </div>
+      <div class="field">
+        <label>GPS (capturá cuando estés ahí)</label>
+        <button class="btn-loc" onclick="capturarGPS()">⊙ Capturar mi ubicación GPS ahora</button>
+        <div class="gps-captured" id="gps-captured">✓ GPS capturado: <span id="gps-coords-txt"></span></div>
+        <input id="f-coords" type="hidden">
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- BLOQUE 4: Nota -->
+      <div class="field"><label>Nota interna</label><textarea id="f-nota" placeholder="Observaciones de cobro..."></textarea></div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-save" onclick="guardar()">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+  <div class="tema-btn">
+  <div class="tema-panel" id="tema-panel">
+    <p>Tema de color</p>
+    <button class="tema-opt activo" id="t-dark" onclick="setTema('')">
+      <span class="tema-swatch" style="background:#1a1d27;border-color:#378ADD"></span>
+      <span>Oscuro</span>
+    </button>
+    <button class="tema-opt" id="t-sol" onclick="setTema('tema-sol')">
+      <span class="tema-swatch" style="background:#99182A;border-color:#F8CCD7"></span>
+      <span>Sol ♥</span>
+    </button>
+    <button class="tema-opt" id="t-floral" onclick="setTema('tema-floral')">
+      <span class="tema-swatch" style="background:#F0C4CB;border-color:#C87D87"></span>
+      <span>Floral</span>
+    </button>
+    <button class="tema-opt" id="t-aruna" onclick="setTema('tema-aruna')">
+      <span class="tema-swatch" style="background:#C295BC;border-color:#704F7F"></span>
+      <span>Aruna</span>
+    </button>
+  </div>
+  <button class="tema-toggle" onclick="toggleTemaPanel()">🎨</button>
+</div>
+<script>
+const KEY='afiliados_dark_v4';
+let data=[];
+let editId=null;
+let orden='manual';
+let dragSrc=null;
+
+function cargar(){try{data=JSON.parse(localStorage.getItem(KEY))||[];}catch(e){data=[];}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));}
+function ini(n,a){return((n||'')[0]||'').toUpperCase()+((a||'')[0]||'').toUpperCase();}
+function fmtF(f){if(!f)return'—';const[y,m,d]=f.split('-');return d+'/'+m+'/'+y;}
+function fmtM(m){return'$'+(parseFloat(m)||0).toLocaleString('es-AR');}
+
+function estadoReal(a){
+  if(a.estado==='pagado')return'pagado';
+  if(a.fecha){
+    const hoy=new Date();
+    hoy.setHours(0,0,0,0);
+    const fechaCobro=new Date(a.fecha+'T00:00:00');
+    if(fechaCobro<hoy)return'vencido';
+  }
+  return'pendiente';
+}
+
+function cambiarOrden(){orden=document.getElementById('ordenar').value;renderAll();}
+
+function showTab(t){
+  ['lista','pagados','pendientes','vencidos','recaudado'].forEach((tab,i)=>{
+    document.querySelectorAll('.tab')[i].classList.toggle('active',tab===t);
+  });
+  document.querySelectorAll('.panel').forEach(el=>el.classList.remove('active'));
+  document.getElementById('panel-'+t).classList.add('active');
+  renderAll();
+}
+
+function renderStats(){
+  document.getElementById('st-total').textContent=data.length;
+  document.getElementById('st-pag').textContent=data.filter(a=>estadoReal(a)==='pagado').length;
+  document.getElementById('st-venc').textContent=data.filter(a=>estadoReal(a)==='vencido').length;
+}
+
+function getOrdenados(){
+  const q=document.getElementById('buscar').value.toLowerCase();
+  let lista=data.filter(a=>
+    (a.nombre||'').toLowerCase().includes(q)||
+    (a.apellido||'').toLowerCase().includes(q)||
+    (a.nro||'').toLowerCase().includes(q)||
+    (a.ref||'').toLowerCase().includes(q)||
+    (a.nota||'').toLowerCase().includes(q)
+  );
+  if(orden==='manual')return lista;
+  lista=[...lista];
+  lista.sort((a,b)=>{
+    if(orden==='apellido')return(a.apellido||'').localeCompare(b.apellido||'');
+    if(orden==='nro')return(a.nro||'').localeCompare(b.nro||'');
+    if(orden==='fecha')return(a.fecha||'').localeCompare(b.fecha||'');
+    if(orden==='monto')return(parseFloat(b.monto)||0)-(parseFloat(a.monto)||0);
+    if(orden==='estado'){const o={pagado:0,pendiente:1,vencido:2};return(o[estadoReal(a)]||0)-(o[estadoReal(b)]||0);}
+    return 0;
+  });
+  return lista;
+}
+
+function renderLista(){
+  renderStats();
+  const isManual=orden==='manual';
+  document.getElementById('hint-drag').style.display=isManual?'flex':'none';
+  const lista=getOrdenados();
+  const cont=document.getElementById('lista-cont');
+  if(!lista.length){cont.innerHTML='<div class="empty">No hay afiliados.<br>Tocá + Nuevo para agregar.</div>';return;}
+  cont.innerHTML=lista.map(a=>{
+    const er=estadoReal(a);
+    const bCls=er==='pagado'?'b-pag':er==='vencido'?'b-venc':'b-pen';
+    const bTxt=er==='pagado'?'Pagado':er==='vencido'?'Vencido':'Pendiente';
+    const mCls=a.metodo==='transferencia'?'b-tr':'b-ef';
+    const mTxt=a.metodo==='transferencia'?'Transfer.':'Efectivo';
+    const gpsUrl=a.coords?`https://maps.google.com/?q=${a.coords}`:'';
+    return`<div class="card ${er}" draggable="${isManual}" data-id="${a.id}"
+      ondragstart="onDragStart(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragend="onDragEnd(event)"
+      ontouchstart="onTouchStart(event)" ontouchmove="onTouchMove(event)" ontouchend="onTouchEnd(event)">
+      <div class="card-header">
+        ${isManual?'<span class="drag-handle">☰</span>':''}
+        <div class="avatar">${ini(a.nombre,a.apellido)}</div>
+        <div class="card-title">
+          <p>${a.apellido||''}, ${a.nombre||''}</p>
+          <span>N° ${a.nro||'—'}</span>
+        </div>
+        <span class="badge ${bCls}">${bTxt}</span>
+        <span class="badge ${mCls}">${mTxt}</span>
+        ${a.coords?'<span class="badge" style="background:#1a2e0a;color:#C0DD97;font-size:9px">GPS ✓</span>':''}
+      </div>
+      <div class="card-body">
+      <span class="lbl">Monto</span><span class="val">${fmtM(a.monto)}</span>
+      <span class="lbl">Fecha cobro</span><span class="val">${fmtF(a.fecha)}</span>
+      ${a.mutual?`<span class="lbl">Mutual</span><span class="val">${a.mutual}</span>`:''}
+      ${a.plan?`<span class="lbl">Plan</span><span class="val">${a.plan}</span>`:''}
+      ${a.horario?`<span class="lbl">Horario</span><span class="val">${a.horario}</span>`:''}
+      ${a.fechapago?`<span class="lbl">Fecha pago</span><span class="val">${fmtF(a.fechapago)}</span>`:''}
+      </div>
+      ${a.ref?`<div class="card-ref">📍 ${a.ref}</div>`:''}
+      ${a.nota?`<div class="card-nota">📋 ${a.nota}</div>`:''}
+      <div class="card-actions">
+        ${gpsUrl?`<button class="btn-sm btn-gps" onclick="window.open('${gpsUrl}','_blank')">Ver GPS</button>`:''}
+        <button class="btn-sm btn-edit" onclick="editar('${a.id}')">Editar</button>
+        <button class="btn-sm btn-del" onclick="eliminar('${a.id}')">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* Drag & drop desktop */
+function onDragStart(e){dragSrc=e.currentTarget;dragSrc.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain',dragSrc.dataset.id);}
+function onDragOver(e){e.preventDefault();e.dataTransfer.dropEffect='move';document.querySelectorAll('.card').forEach(c=>c.classList.remove('drag-over'));if(e.currentTarget!==dragSrc)e.currentTarget.classList.add('drag-over');}
+function onDrop(e){e.preventDefault();const tgt=e.currentTarget;tgt.classList.remove('drag-over');if(!dragSrc||dragSrc===tgt)return;const si=data.findIndex(x=>x.id===dragSrc.dataset.id),ti=data.findIndex(x=>x.id===tgt.dataset.id);if(si===-1||ti===-1)return;const[m]=data.splice(si,1);data.splice(ti,0,m);save();renderLista();}
+function onDragEnd(){document.querySelectorAll('.card').forEach(c=>{c.classList.remove('dragging');c.classList.remove('drag-over');});dragSrc=null;}
+
+/* Touch drag para mobile */
+let touchDragEl=null,touchClone=null,touchStartY=0,touchDragId=null;
+function onTouchStart(e){
+  if(orden!=='manual')return;
+  const handle=e.target.closest('.drag-handle');
+  if(!handle)return;
+  e.preventDefault();
+  touchDragEl=e.currentTarget;
+  touchDragId=touchDragEl.dataset.id;
+  touchStartY=e.touches[0].clientY;
+  touchDragEl.classList.add('dragging');
+}
+function onTouchMove(e){
+  if(!touchDragEl)return;
+  e.preventDefault();
+  const y=e.touches[0].clientY;
+  const cards=[...document.querySelectorAll('#lista-cont .card')];
+  cards.forEach(c=>c.classList.remove('drag-over'));
+  const target=cards.find(c=>{
+    if(c===touchDragEl)return false;
+    const r=c.getBoundingClientRect();
+    return y>=r.top&&y<=r.bottom;
+  });
+  if(target)target.classList.add('drag-over');
+}
+function onTouchEnd(e){
+  if(!touchDragEl)return;
+  const cards=[...document.querySelectorAll('#lista-cont .card')];
+  const target=cards.find(c=>c.classList.contains('drag-over'));
+  if(target&&target!==touchDragEl){
+    const si=data.findIndex(x=>x.id===touchDragId);
+    const ti=data.findIndex(x=>x.id===target.dataset.id);
+    if(si!==-1&&ti!==-1){const[m]=data.splice(si,1);data.splice(ti,0,m);save();}
+  }
+  touchDragEl.classList.remove('dragging');
+  cards.forEach(c=>c.classList.remove('drag-over'));
+  touchDragEl=null;touchDragId=null;
+  renderLista();
+}
+
+function renderTabla(tbId,lista,tipo){
+  const tb=document.getElementById(tbId);
+  if(!lista.length){tb.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:28px;color:#5a6282">Sin registros</td></tr>`;return;}
+  tb.innerHTML=lista.map(a=>{
+    if(tipo==='pag')return`<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td style="color:#C0DD97;font-weight:600">${fmtM(a.monto)}</td><td>${a.metodo==='efectivo'?'Efectivo':'Transfer.'}</td><td>${fmtF(a.fechapago||a.fecha)}</td></tr>`;
+    if(tipo==='pen')return`<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td>${fmtM(a.monto)}</td><td>${fmtF(a.fecha)}</td><td style="color:#5a6282;font-style:italic;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.nota||a.ref||'—'}</td></tr>`;
+    if(tipo==='venc')return`<tr><td>${a.nro||'—'}</td><td>${a.apellido||''} ${a.nombre||''}</td><td style="color:#F7C1C1;font-weight:600">${fmtM(a.monto)}</td><td style="color:#F7C1C1">${fmtF(a.fecha)}</td><td><span class="badge b-venc">Vencido</span></td></tr>`;
+    return'';
+  }).join('');
+}
+
+function renderRecaudado(){
+  const pag=data.filter(a=>estadoReal(a)==='pagado');
+  const pen=data.filter(a=>estadoReal(a)==='pendiente');
+  const venc=data.filter(a=>estadoReal(a)==='vencido');
+  const sum=arr=>arr.reduce((s,a)=>s+(parseFloat(a.monto)||0),0);
+  const sP=sum(pag),sPen=sum(pen),sV=sum(venc);
+  const sEf=sum(pag.filter(a=>a.metodo==='efectivo'));
+  const sTr=sum(pag.filter(a=>a.metodo==='transferencia'));
+  const tot=sP+sPen+sV||1;
+  const pP=Math.round(sP/tot*100),pPen=Math.round(sPen/tot*100),pV=Math.round(sV/tot*100);
+  document.getElementById('recaudado-cont').innerHTML=`<div class="recaud">
+    <div class="rec-big"><div class="rv">${fmtM(sP)}</div><div class="rl">Total recaudado (pagados)</div></div>
+    <div class="rec-grid">
+      <div class="rec-card"><div class="rv" style="color:#C0DD97">${fmtM(sEf)}</div><div class="rl">Efectivo</div></div>
+      <div class="rec-card"><div class="rv" style="color:#CECBF6">${fmtM(sTr)}</div><div class="rl">Transferencia</div></div>
+      <div class="rec-card"><div class="rv" style="color:#FAC775">${fmtM(sPen)}</div><div class="rl">Por cobrar</div></div>
+      <div class="rec-card"><div class="rv" style="color:#F7C1C1">${fmtM(sV)}</div><div class="rl">Vencidos sin pagar</div></div>
+    </div>
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px">
+      <div style="font-size:11px;font-weight:600;margin-bottom:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Distribución por estado</div>
+      <div class="bar-row"><span class="bar-lbl">Pagados</span><div class="bar-track"><div class="bar-fill" style="width:${pP}%;background:#639922"></div></div><span class="bar-val" style="color:#C0DD97">${pP}%</span></div>
+      <div class="bar-row"><span class="bar-lbl">Pendientes</span><div class="bar-track"><div class="bar-fill" style="width:${pPen}%;background:#EF9F27"></div></div><span class="bar-val" style="color:#FAC775">${pPen}%</span></div>
+      <div class="bar-row"><span class="bar-lbl">Vencidos</span><div class="bar-track"><div class="bar-fill" style="width:${pV}%;background:#E24B4A"></div></div><span class="bar-val" style="color:#F7C1C1">${pV}%</span></div>
+    </div>
+    <div style="background:var(--blue-bg);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-top:4px">
+  <div style="font-size:11px;font-weight:600;margin-bottom:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Mis ganancias (9% por cobro)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+    <div style="background:var(--bg2);border-radius:9px;padding:11px;text-align:center">
+      <div style="font-size:18px;font-weight:700;color:var(--accent-light)">${fmtM(Math.round(sEf*0.09))}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px">9% efectivo</div>
+    </div>
+    <div style="background:var(--bg2);border-radius:9px;padding:11px;text-align:center">
+      <div style="font-size:18px;font-weight:700;color:var(--accent-light)">${fmtM(Math.round(sTr*0.09))}</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:3px">9% transfer.</div>
+    </div>
+  </div>
+  <div style="background:var(--bg2);border-radius:9px;padding:13px;text-align:center">
+    <div style="font-size:24px;font-weight:700;color:var(--accent-light)">${fmtM(Math.round(sP*0.09))}</div>
+    <div style="font-size:12px;color:var(--text3);margin-top:4px">Total mis ganancias del período</div>
+  </div>
+</div>
+<div style="font-size:11px;color:var(--text3);text-align:center;padding-bottom:4px;margin-top:8px">${data.length} afiliados &nbsp;|&nbsp; ${pag.length} pagados &nbsp;|&nbsp; ${pen.length} pendientes &nbsp;|&nbsp; ${venc.length} vencidos</div>
+  </div>`;
+}
+
+function renderAll(){renderLista();renderTabla('tbl-pagados',data.filter(a=>estadoReal(a)==='pagado'),'pag');renderTabla('tbl-pendientes',data.filter(a=>estadoReal(a)==='pendiente'),'pen');renderTabla('tbl-vencidos',data.filter(a=>estadoReal(a)==='vencido'),'venc');renderRecaudado();}
+
+function capturarGPS(){
+  const btn=document.querySelector('.btn-loc');
+  btn.textContent='Capturando...';
+  if(!navigator.geolocation){alert('GPS no disponible en este dispositivo.');btn.textContent='⊙ Capturar mi ubicación GPS ahora';return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const lat=pos.coords.latitude.toFixed(6);
+    const lng=pos.coords.longitude.toFixed(6);
+    document.getElementById('f-coords').value=lat+','+lng;
+    document.getElementById('gps-coords-txt').textContent=lat+', '+lng;
+    document.getElementById('gps-captured').style.display='block';
+    btn.textContent='⊙ Recapturar GPS';
+  },()=>{btn.textContent='⊙ Capturar mi ubicación GPS ahora';alert('No se pudo obtener la ubicación. Verificá los permisos del navegador.');});
+}
+
+function abrirModal(id){
+  editId=id||null;
+  document.getElementById('modal-titulo').textContent=editId?'Editar afiliado':'Nuevo afiliado';
+  ['nro','nombre','apellido','monto','fecha','fechapago','nota','ref','mutual','plan','horario'].forEach(c=>{const el=document.getElementById('f-'+c);if(el)el.value='';});
+  document.getElementById('f-coords').value='';
+  document.getElementById('f-metodo').value='efectivo';
+  document.getElementById('f-estado').value='pendiente';
+  document.getElementById('gps-captured').style.display='none';
+  document.querySelector('.btn-loc').textContent='⊙ Capturar mi ubicación GPS ahora';
+  if(editId){
+    const a=data.find(x=>x.id===editId);
+    if(a){
+      document.getElementById('f-nro').value=a.nro||'';
+      document.getElementById('f-nombre').value=a.nombre||'';
+      document.getElementById('f-apellido').value=a.apellido||'';
+      document.getElementById('f-monto').value=a.monto||'';
+      document.getElementById('f-fecha').value=a.fecha||'';
+      document.getElementById('f-metodo').value=a.metodo||'efectivo';
+      document.getElementById('f-estado').value=a.estado||'pendiente';
+      document.getElementById('f-fechapago').value=a.fechapago||'';
+      document.getElementById('f-nota').value=a.nota||'';
+      document.getElementById('f-mutual').value=a.mutual||'';
+      document.getElementById('f-plan').value=a.plan||'';
+      document.getElementById('f-horario').value=a.horario||'';
+      document.getElementById('f-ref').value=a.ref||'';
+      document.getElementById('f-coords').value=a.coords||'';
+      if(a.coords){document.getElementById('gps-coords-txt').textContent=a.coords;document.getElementById('gps-captured').style.display='block';document.querySelector('.btn-loc').textContent='⊙ Recapturar GPS';}
+    }
+  }
+  document.getElementById('overlay').classList.add('open');
+}
+
+function cerrarModal(){document.getElementById('overlay').classList.remove('open');editId=null;}
+
+function guardar(){
+  const nombre=document.getElementById('f-nombre').value.trim();
+  const apellido=document.getElementById('f-apellido').value.trim();
+  if(!nombre&&!apellido){alert('Ingresá al menos nombre o apellido.');return;}
+  const obj={
+    id:editId||('id_'+Date.now()),
+    nro:document.getElementById('f-nro').value.trim(),
+    nombre,apellido,
+    ref:document.getElementById('f-ref').value.trim(),
+    coords:document.getElementById('f-coords').value.trim(),
+    monto:document.getElementById('f-monto').value,
+    fecha:document.getElementById('f-fecha').value,
+    metodo:document.getElementById('f-metodo').value,
+    estado:document.getElementById('f-estado').value,
+    fechapago:document.getElementById('f-fechapago').value,
+    mutual:document.getElementById('f-mutual').value.trim(),
+    plan:document.getElementById('f-plan').value.trim(),
+    horario:document.getElementById('f-horario').value.trim(),
+    nota:document.getElementById('f-nota').value.trim()
+  };
+  if(editId){const i=data.findIndex(x=>x.id===editId);data[i]=obj;}
+  else data.push(obj);
+  save();cerrarModal();renderAll();
+}
+
+function editar(id){abrirModal(id);}
+function eliminar(id){if(!confirm('¿Eliminar este afiliado? No se puede deshacer.'))return;data=data.filter(x=>x.id!==id);save();renderAll();}
+
+document.getElementById('fecha-hoy').textContent=new Date().toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+document.getElementById('buscar').addEventListener('input',renderAll);
+document.getElementById('overlay').addEventListener('click',function(e){if(e.target===this)cerrarModal();});
+function toggleTemaPanel(){document.getElementById('tema-panel').classList.toggle('open');}
+function setTema(cls){
+  document.body.className=cls;
+  localStorage.setItem('tema_afiliados',cls);
+  document.querySelectorAll('.tema-opt').forEach(el=>el.classList.remove('activo'));
+  const map={'':'t-dark','tema-sol':'t-sol','tema-floral':'t-floral','tema-aruna':'t-aruna'};
+  const el=document.getElementById(map[cls]);
+  if(el)el.classList.add('activo');
+  document.getElementById('tema-panel').classList.remove('open');
+}
+(function(){const t=localStorage.getItem('tema_afiliados')||'';setTema(t);})();
+cargar();
+renderAll();
+</script>
+</body>
+</html>
