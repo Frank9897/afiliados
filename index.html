@@ -521,6 +521,7 @@ function renderRecaudado(){
   </div>
 </div>
 <div style="font-size:11px;color:var(--text3);text-align:center;padding-bottom:4px;margin-top:8px">${data.length} afiliados &nbsp;|&nbsp; ${pag.length} pagados &nbsp;|&nbsp; ${pen.length} pendientes &nbsp;|&nbsp; ${venc.length} vencidos</div>
+  </div>\`;
 }
 
 function renderAll(){renderLista();renderTabla('tbl-pagados',data.filter(a=>estadoReal(a)==='pagado'),'pag');renderTabla('tbl-pendientes',data.filter(a=>estadoReal(a)==='pendiente'),'pen');renderTabla('tbl-vencidos',data.filter(a=>estadoReal(a)==='vencido'),'venc');renderRecaudado();}
