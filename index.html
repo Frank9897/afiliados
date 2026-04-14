@@ -55,6 +55,17 @@ body.tema-aruna{
   --purple:#704f7f;--purple-bg:#f5e6f5;--purple-light:#e7c8d7;
   --accent:#704f7f;--accent-bg:#f5e6f5;--accent-light:#704f7f;
 }
+body.tema-rosa{
+  --bg:#fff5f8;--bg2:#ffffff;--bg3:#ffedf3;--bg4:#ffd6e7;
+  --border:#ffb8d4;--border2:#ff85b3;
+  --text:#3d0020;--text2:#8b1a4a;--text3:#d4608a;
+  --blue:#c2185b;--blue-bg:#ffedf3;--blue-light:#c2185b;
+  --green:#6d9b5f;--green-bg:#edf7ea;--green-light:#3a6b2e;
+  --amber:#e07b54;--amber-bg:#fff3ee;--amber-light:#8b3a1a;
+  --red:#c2185b;--red-bg:#ffd6e7;--red-light:#6b0030;
+  --purple:#a0559e;--purple-bg:#faeafa;--purple-light:#6b1a6b;
+  --accent:#c2185b;--accent-bg:#ffedf3;--accent-light:#c2185b;
+}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh}
 .app{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;position:relative}
 
@@ -82,6 +93,13 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .btn-add{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 13px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
 
 .hint-drag{font-size:11px;color:var(--text3);margin-bottom:8px;padding:6px 10px;background:var(--bg3);border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.filtros{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.filtro-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.filtro-btn:active{transform:scale(.97)}
+.filtro-btn.activo-todos{background:var(--blue);color:#fff;border-color:var(--blue)}
+.filtro-btn.activo-pendiente{background:var(--amber-bg);color:var(--amber-light);border-color:var(--amber)}
+.filtro-btn.activo-pagado{background:var(--green-bg);color:var(--green-light);border-color:var(--green)}
+.filtro-btn.activo-vencido{background:var(--red-bg);color:var(--red-light);border-color:var(--red)}
 
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:grab;user-select:none;transition:opacity .15s,transform .15s,border-color .15s}
 .card:active{cursor:grabbing}
@@ -205,6 +223,12 @@ tr:hover td{background:var(--bg3)}
       </select>
       <button class="btn-add" onclick="abrirModal()">+ Nuevo</button>
     </div>
+    <div class="filtros">
+      <button class="filtro-btn activo-todos" id="f-todos" onclick="setFiltro('todos')">Todos</button>
+      <button class="filtro-btn" id="f-pendiente" onclick="setFiltro('pendiente')">Pendientes</button>
+      <button class="filtro-btn" id="f-pagado" onclick="setFiltro('pagado')">Pagados</button>
+      <button class="filtro-btn" id="f-vencido" onclick="setFiltro('vencido')">Vencidos</button>
+    </div>
     <div id="hint-drag" class="hint-drag" style="display:none">☰ Arrastrá las tarjetas para ordenar a tu gusto — se guarda automáticamente</div>
     <div id="lista-cont"></div>
   </div>
@@ -299,7 +323,7 @@ tr:hover td{background:var(--bg3)}
     </button>
     <button class="tema-opt" id="t-sol" onclick="setTema('tema-sol')">
       <span class="tema-swatch" style="background:#99182A;border-color:#F8CCD7"></span>
-      <span>Sol ♥</span>
+      <span>Sol</span>
     </button>
     <button class="tema-opt" id="t-floral" onclick="setTema('tema-floral')">
       <span class="tema-swatch" style="background:#F0C4CB;border-color:#C87D87"></span>
@@ -309,6 +333,10 @@ tr:hover td{background:var(--bg3)}
       <span class="tema-swatch" style="background:#C295BC;border-color:#704F7F"></span>
       <span>Aruna</span>
     </button>
+    <button class="tema-opt" id="t-rosa" onclick="setTema('tema-rosa')">
+      <span class="tema-swatch" style="background:#ff85b3;border-color:#c2185b"></span>
+      <span>Rosa perla ✿</span>
+    </button>
   </div>
   <button class="tema-toggle" onclick="toggleTemaPanel()">🎨</button>
 </div>
@@ -317,6 +345,7 @@ const KEY='afiliados_dark_v4';
 let data=[];
 let editId=null;
 let orden='manual';
+let filtroActivo='todos';
 let dragSrc=null;
 
 function cargar(){try{data=JSON.parse(localStorage.getItem(KEY))||[];}catch(e){data=[];}}
@@ -338,6 +367,14 @@ function estadoReal(a){
 
 function cambiarOrden(){orden=document.getElementById('ordenar').value;renderAll();}
 
+function setFiltro(f){
+  filtroActivo=f;
+  document.querySelectorAll('.filtro-btn').forEach(el=>el.className='filtro-btn');
+  const el=document.getElementById('f-'+f);
+  if(el) el.classList.add('activo-'+f);
+  renderAll();
+}
+
 function showTab(t){
   ['lista','pagados','pendientes','vencidos','recaudado'].forEach((tab,i)=>{
     document.querySelectorAll('.tab')[i].classList.toggle('active',tab===t);
@@ -356,11 +393,12 @@ function renderStats(){
 function getOrdenados(){
   const q=document.getElementById('buscar').value.toLowerCase();
   let lista=data.filter(a=>
-    (a.nombre||'').toLowerCase().includes(q)||
+    ((a.nombre||'').toLowerCase().includes(q)||
     (a.apellido||'').toLowerCase().includes(q)||
     (a.nro||'').toLowerCase().includes(q)||
     (a.ref||'').toLowerCase().includes(q)||
-    (a.nota||'').toLowerCase().includes(q)
+    (a.nota||'').toLowerCase().includes(q)) &&
+    (filtroActivo==='todos' || estadoReal(a)===filtroActivo)
   );
   if(orden==='manual')return lista;
   lista=[...lista];
@@ -610,7 +648,7 @@ function setTema(cls){
   document.body.className=cls;
   localStorage.setItem('tema_afiliados',cls);
   document.querySelectorAll('.tema-opt').forEach(el=>el.classList.remove('activo'));
-  const map={'':'t-dark','tema-sol':'t-sol','tema-floral':'t-floral','tema-aruna':'t-aruna'};
+  const map={'':'t-dark','tema-sol':'t-sol','tema-floral':'t-floral','tema-aruna':'t-aruna','tema-rosa':'t-rosa'};
   const el=document.getElementById(map[cls]);
   if(el)el.classList.add('activo');
   document.getElementById('tema-panel').classList.remove('open');
